@@ -16,7 +16,7 @@ defmodule AdventOfCode2019 do
       |> DayTwo.execute()
 
     IO.puts("2.1 #{day_two[:one]}")
-    # IO.puts("2.2 #{day_two[:two]}")
+    IO.puts("2.2 #{day_two[:two]}")
   end
 
   defp to_ints(input), do: Enum.map(input, &String.to_integer(&1))
