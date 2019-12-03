@@ -1,0 +1,5 @@
+%{
+  "advent_of_code_helper": {:hex, :advent_of_code_helper, "0.1.2", "80ba54ecb2b87868796a14ada06707bef7093ba75fc47926a5ea818a41d7d3b6", [:mix], [{:httpotion, "~> 3.0.2", [hex: :httpotion, repo: "hexpm", optional: false]}], "hexpm"},
+  "httpotion": {:hex, :httpotion, "3.0.3", "17096ea1a7c0b2df74509e9c15a82b670d66fc4d66e6ef584189f63a9759428d", [:mix], [{:ibrowse, "~> 4.4", [hex: :ibrowse, repo: "hexpm", optional: false]}], "hexpm"},
+  "ibrowse": {:hex, :ibrowse, "4.4.1", "2b7d0637b0f8b9b4182de4bd0f2e826a4da2c9b04898b6e15659ba921a8d6ec2", [:rebar3], [], "hexpm"},
+}
