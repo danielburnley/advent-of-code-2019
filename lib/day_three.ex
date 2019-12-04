@@ -1,8 +1,8 @@
 defmodule DayThree do
   def execute(input) do
     [first, second] = input
-    first = String.split(first, ",") |> parse_instructions |> String.graphemes()
-    second = String.split(second, ",") |> parse_instructions |> String.graphemes()
+    first = String.split(first, ",") |> DayThree.Parser.parse_instructions |> String.graphemes()
+    second = String.split(second, ",") |> DayThree.Parser.parse_instructions |> String.graphemes()
     [{:one, part_one(first, second)}, {:two, "Not yet"}]
   end
 
@@ -36,36 +36,29 @@ defmodule DayThree do
     calculate_visited(rest, new_pos, [new_pos | visited])
   end
 
-  defp parse_instructions(instructions, parsed \\ "")
-  defp parse_instructions([], parsed), do: parsed
-
-  defp parse_instructions(["U" <> times | rest], parsed) do
-    parse_instructions(rest, parsed <> String.duplicate("U", String.to_integer(times)))
-  end
-
-  defp parse_instructions(["D" <> times | rest], parsed) do
-    parse_instructions(rest, parsed <> String.duplicate("D", String.to_integer(times)))
-  end
-
-  defp parse_instructions(["L" <> times | rest], parsed) do
-    parse_instructions(rest, parsed <> String.duplicate("L", String.to_integer(times)))
-  end
-
-  defp parse_instructions(["R" <> times | rest], parsed) do
-    parse_instructions(rest, parsed <> String.duplicate("R", String.to_integer(times)))
-  end
-
-  # defp run_instruction("U" <> rest, pos, visited) do
-  # end
-  # defp run_instruction("D" <> rest, {x, y}, visited) do
-  # end
-  # defp run_instruction("L" <> rest, {x, y}, visited) do
-  # end
-  # defp run_instruction("R" <> rest, {x, y}, visited) do
-  # end
-
   defp up({x, y}), do: {x, y + 1}
   defp down({x, y}), do: {x, y - 1}
   defp left({x, y}), do: {x - 1, y}
   defp right({x, y}), do: {x + 1, y}
+
+  defmodule Parser do
+    def parse_instructions(instructions, parsed \\ "")
+    def parse_instructions([], parsed), do: parsed
+
+    def parse_instructions(["U" <> times | rest], parsed) do
+      parse_instructions(rest, parsed <> String.duplicate("U", String.to_integer(times)))
+    end
+
+    def parse_instructions(["D" <> times | rest], parsed) do
+      parse_instructions(rest, parsed <> String.duplicate("D", String.to_integer(times)))
+    end
+
+    def parse_instructions(["L" <> times | rest], parsed) do
+      parse_instructions(rest, parsed <> String.duplicate("L", String.to_integer(times)))
+    end
+
+    def parse_instructions(["R" <> times | rest], parsed) do
+      parse_instructions(rest, parsed <> String.duplicate("R", String.to_integer(times)))
+    end
+  end
 end
