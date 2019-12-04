@@ -1,22 +1,37 @@
 defmodule AdventOfCode2019 do
   def run do
-    day_one =
+    day_one()
+    day_two()
+    day_three()
+  end
+
+  defp day_one do
+    result =
       read_input(1)
       |> split_by_new_line
       |> to_ints
       |> DayOne.execute()
 
-    IO.puts("1.1 #{day_one[:one]}")
-    IO.puts("1.2 #{day_one[:two]}")
+    IO.puts("1.1 #{result[:one]}")
+    IO.puts("1.2 #{result[:two]}")
+  end
 
-    day_two =
+  defp day_two do
+    result =
       read_input(2)
       |> split_by_comma
       |> to_ints
       |> DayTwo.execute()
 
-    IO.puts("2.1 #{day_two[:one]}")
-    IO.puts("2.2 #{day_two[:two]}")
+    IO.puts("2.1 #{result[:one]}")
+    IO.puts("2.2 #{result[:two]}")
+  end
+
+  defp day_three do
+    result = read_input(3) |> split_by_new_line |> DayThree.execute()
+
+    IO.puts("3.1 #{result[:one]}")
+    IO.puts("3.2 #{result[:two]}")
   end
 
   defp to_ints(input), do: Enum.map(input, &String.to_integer(&1))

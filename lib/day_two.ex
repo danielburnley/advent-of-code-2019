@@ -16,8 +16,9 @@ defmodule DayTwo do
     100 * noun + verb
   end
 
-  defp run_part_two(program, _, {inputs, 19690720}), do: inputs
-  defp run_part_two(program, [inputs|rest], _) do
+  defp run_part_two(program, _, {inputs, 19_690_720}), do: inputs
+
+  defp run_part_two(program, [inputs | rest], _) do
     [a, b] = inputs
     output = run_program(%{program | 1 => a, 2 => b})
     run_part_two(program, rest, {inputs, output})
