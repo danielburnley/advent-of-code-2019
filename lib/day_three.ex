@@ -3,37 +3,49 @@ defmodule DayThree do
     [first, second] = input
     first = String.split(first, ",") |> DayThree.Parser.parse_instructions |> String.graphemes()
     second = String.split(second, ",") |> DayThree.Parser.parse_instructions |> String.graphemes()
-    [{:one, part_one(first, second)}, {:two, "Not yet"}]
+    [{:one, part_one(first, second)}, {:two, part_two(first, second)}]
   end
 
   defp part_one(first, second) do
-    first_visited = calculate_visited(first)
-    second_visited = calculate_visited(second)
+    first_visited = calculate_visited(first) |> visited_coords
+    second_visited = calculate_visited(second) |> visited_coords
     crossover = MapSet.intersection(first_visited, second_visited)
     Enum.map(crossover, fn {x, y} -> abs(x) + abs(y) end) |> Enum.min
   end
 
-  defp calculate_visited(instructions, position \\ {0, 0}, visited \\ [])
-  defp calculate_visited([], _, visited), do: MapSet.new(visited)
+  defp part_two(first, second) do
+    first_visited = calculate_visited(first)
+    second_visited = calculate_visited(second)
 
-  defp calculate_visited(["U" | rest], position, visited) do
+    crossover = MapSet.intersection(visited_coords(first_visited), visited_coords(second_visited))
+    Enum.map(crossover, fn pos -> first_visited[pos] + second_visited[pos] end) |> Enum.min
+  end
+
+  defp visited_coords(visited_with_steps) do
+    visited_with_steps |> Map.keys |> MapSet.new
+  end
+
+  defp calculate_visited(instructions, position \\ {0, 0}, steps \\ 1, visited \\ %{})
+  defp calculate_visited([], _, _, visited), do: visited
+
+  defp calculate_visited(["U" | rest], position, steps, visited) do
     new_pos = up(position)
-    calculate_visited(rest, new_pos, [new_pos | visited])
+    calculate_visited(rest, new_pos, steps + 1, Map.put_new(visited, new_pos, steps))
   end
 
-  defp calculate_visited(["D" | rest], position, visited) do
+  defp calculate_visited(["D" | rest], position, steps, visited) do
     new_pos = down(position)
-    calculate_visited(rest, new_pos, [new_pos | visited])
+    calculate_visited(rest, new_pos, steps + 1, Map.put_new(visited, new_pos, steps))
   end
 
-  defp calculate_visited(["L" | rest], position, visited) do
+  defp calculate_visited(["L" | rest], position, steps, visited) do
     new_pos = left(position)
-    calculate_visited(rest, new_pos, [new_pos | visited])
+    calculate_visited(rest, new_pos, steps + 1, Map.put_new(visited, new_pos, steps))
   end
 
-  defp calculate_visited(["R" | rest], position, visited) do
+  defp calculate_visited(["R" | rest], position, steps, visited) do
     new_pos = right(position)
-    calculate_visited(rest, new_pos, [new_pos | visited])
+    calculate_visited(rest, new_pos, steps + 1, Map.put_new(visited, new_pos, steps))
   end
 
   defp up({x, y}), do: {x, y + 1}
