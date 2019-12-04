@@ -1,8 +1,11 @@
 defmodule DayThree do
   def execute(input) do
     [first, second] = input
-    first = String.split(first, ",") |> DayThree.Parser.parse_instructions |> String.graphemes()
-    second = String.split(second, ",") |> DayThree.Parser.parse_instructions |> String.graphemes()
+    first = String.split(first, ",") |> DayThree.Parser.parse_instructions() |> String.graphemes()
+
+    second =
+      String.split(second, ",") |> DayThree.Parser.parse_instructions() |> String.graphemes()
+
     [{:one, part_one(first, second)}, {:two, part_two(first, second)}]
   end
 
@@ -10,7 +13,7 @@ defmodule DayThree do
     first_visited = calculate_visited(first) |> visited_coords
     second_visited = calculate_visited(second) |> visited_coords
     crossover = MapSet.intersection(first_visited, second_visited)
-    Enum.map(crossover, fn {x, y} -> abs(x) + abs(y) end) |> Enum.min
+    Enum.map(crossover, fn {x, y} -> abs(x) + abs(y) end) |> Enum.min()
   end
 
   defp part_two(first, second) do
@@ -18,11 +21,11 @@ defmodule DayThree do
     second_visited = calculate_visited(second)
 
     crossover = MapSet.intersection(visited_coords(first_visited), visited_coords(second_visited))
-    Enum.map(crossover, fn pos -> first_visited[pos] + second_visited[pos] end) |> Enum.min
+    Enum.map(crossover, fn pos -> first_visited[pos] + second_visited[pos] end) |> Enum.min()
   end
 
   defp visited_coords(visited_with_steps) do
-    visited_with_steps |> Map.keys |> MapSet.new
+    visited_with_steps |> Map.keys() |> MapSet.new()
   end
 
   defp calculate_visited(instructions, position \\ {0, 0}, steps \\ 1, visited \\ %{})
