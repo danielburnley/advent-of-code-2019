@@ -3,6 +3,7 @@ defmodule AdventOfCode2019 do
     day_one()
     day_two()
     day_three()
+    day_four()
   end
 
   defp day_one do
@@ -32,6 +33,13 @@ defmodule AdventOfCode2019 do
 
     IO.puts("3.1 #{result[:one]}")
     IO.puts("3.2 #{result[:two]}")
+  end
+
+  defp day_four do
+    result = DayFour.execute(273_025, 767_253)
+
+    IO.puts("4.1 #{result[:one]}")
+    IO.puts("4.2 #{result[:two]}")
   end
 
   defp to_ints(input), do: Enum.map(input, &String.to_integer(&1))
