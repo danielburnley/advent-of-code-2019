@@ -6,7 +6,7 @@ defmodule DayTwo do
   end
 
   defp run_part_one(program) do
-    IntcodeComputer.run_program(%{program | 1 => 12, 2 => 2})
+    IntcodeComputer.run_program(%{program | 1 => 12, 2 => 2})[0]
   end
 
   defp run_part_two(program) do
@@ -20,7 +20,7 @@ defmodule DayTwo do
 
   defp run_part_two(program, [inputs | rest], _) do
     [a, b] = inputs
-    output = IntcodeComputer.run_program(%{program | 1 => a, 2 => b})
+    output = IntcodeComputer.run_program(%{program | 1 => a, 2 => b})[0]
     run_part_two(program, rest, {inputs, output})
   end
 end

@@ -1,6 +1,6 @@
 defmodule IntcodeComputer do
   def run_program(program, index \\ 0, status \\ :ok)
-  def run_program(program, _, :halt), do: program[0]
+  def run_program(program, _, :halt), do: program
 
   def run_program(program, index, _status) do
     instruction = get_next_instruction(program, index)
@@ -26,8 +26,4 @@ defmodule IntcodeComputer do
   defp get_instruction_parameters(program, index, 3), do: program[index+1]
   defp get_instruction_parameters(program, index, 4), do: program[index+1]
   defp get_instruction_parameters(program, index, _), do: { program[index+1], program[index+2], program[index+3] }
-
-  defp get_next_instructions(program, index) do
-    {program[index], program[index + 1], program[index + 2], program[index + 3]}
-  end
 end
