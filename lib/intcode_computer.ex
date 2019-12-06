@@ -36,6 +36,11 @@ defmodule IntcodeComputer do
     {:ok, program, 2}
   end
 
+  defp execute_instruction(4, {first}, program, _) do
+    IO.puts(program[first])
+    {:ok, program, 2}
+  end
+
   defp execute_instruction(99, _, program, _), do: {:halt, program, 0}
 
   defp get_next_instruction(program, index), do: program[index]

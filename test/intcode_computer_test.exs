@@ -1,5 +1,6 @@
 defmodule IntcodeComputerTest do
   use ExUnit.Case
+  import ExUnit.CaptureIO
 
   test "Addition" do
     input = [1, 0, 0, 3, 99]
@@ -11,10 +12,18 @@ defmodule IntcodeComputerTest do
     execute_program(input) |> assert_final_program_is([2, 0, 0, 4, 99])
   end
 
-  @tag focus: true
   test "Input" do
     input_stub = fn -> "10\n" end
     execute_program([3, 0, 99], input_stub) |> assert_final_program_is([10, 0, 99])
+  end
+
+  test "Output" do
+    program_to_run = fn ->
+      execute_program([4, 0, 99])
+    end
+
+    program_to_run.() |> assert_final_program_is([4, 0, 99])
+    assert_program_outputs(program_to_run, "4\n")
   end
 
   test "Day Two: Example 1" do
@@ -52,6 +61,15 @@ defmodule IntcodeComputerTest do
     |> assert_final_program_is([30, 1, 1, 4, 2, 5, 6, 0, 99])
   end
 
+  test "Day Five: Example 1" do
+    input = [3, 0, 4, 0, 99]
+    input_getter = fn -> "10\n" end
+    program_to_run = fn -> execute_program(input, input_getter) end
+
+    program_to_run.() |> assert_final_program_is([10, 0, 4, 0, 99])
+    assert_program_outputs(program_to_run, "10\n")
+  end
+
   defp execute_program(input) do
     IntcodeComputer.Parser.parse_array_to_program(input)
     |> IntcodeComputer.run_program({fn -> "" end})
@@ -64,5 +82,9 @@ defmodule IntcodeComputerTest do
 
   defp assert_final_program_is(actual, expected) do
     assert Map.values(actual) == expected
+  end
+
+  defp assert_program_outputs(program_to_run, expected_output) do
+    assert capture_io(program_to_run) == expected_output
   end
 end
