@@ -18,12 +18,20 @@ defmodule IntcodeComputer do
     program = %{program | result => program[first] * program[second]}
     {:ok, program}
   end
-  
+
   defp execute_instruction(99, _, program), do: {:halt, program}
 
   defp get_next_instruction(program, index), do: program[index]
 
-  defp get_instruction_parameters(program, index, 3), do: program[index+1]
-  defp get_instruction_parameters(program, index, 4), do: program[index+1]
-  defp get_instruction_parameters(program, index, _), do: { program[index+1], program[index+2], program[index+3] }
+  defp get_instruction_parameters(program, index, 3), do: program[index + 1]
+  defp get_instruction_parameters(program, index, 4), do: program[index + 1]
+
+  defp get_instruction_parameters(program, index, _),
+    do: {program[index + 1], program[index + 2], program[index + 3]}
+
+  defmodule Parser do
+    def parse_array_to_program(input) do
+      Enum.with_index(input) |> Enum.map(fn {v, k} -> {k, v} end) |> Map.new()
+    end
+  end
 end
