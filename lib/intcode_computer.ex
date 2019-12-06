@@ -21,12 +21,12 @@ defmodule IntcodeComputer do
   end
 
   defp execute_instruction(1, {first, second, result}, program, _) do
-    program = %{program | result => program[first] + program[second]}
+    program = %{program | result => fetch(program, first, 0) + fetch(program, second, 0)}
     {:ok, program, 4}
   end
 
   defp execute_instruction(2, {first, second, result}, program, _) do
-    program = %{program | result => program[first] * program[second]}
+    program = %{program | result => fetch(program, first, 0) * fetch(program, second, 0)}
     {:ok, program, 4}
   end
 
@@ -50,6 +50,10 @@ defmodule IntcodeComputer do
 
   defp get_instruction_parameters(program, index, _),
     do: {program[index + 1], program[index + 2], program[index + 3]}
+
+  defp fetch(program, value, mode)
+  defp fetch(program, value, 0), do: program[value]
+  defp fetch(_program, value, 1), do: value
 
   defmodule Parser do
     def parse_array_to_program(input) do
