@@ -1,30 +1,47 @@
 defmodule IntcodeComputer do
-  def run_program(program, index \\ 0, status \\ :ok)
-  def run_program(program, _, :halt), do: program
+  def run_program(program, dependencies), do: run_program(program, 0, :ok, dependencies)
 
-  def run_program(program, index, _status) do
+  def run_program(
+        program,
+        index \\ 0,
+        status \\ :ok,
+        dependencies \\ {fn -> "Not implemented" end}
+      )
+
+  def run_program(program, _, :halt, _), do: program
+
+  def run_program(program, index, _status, {input_getter}) do
     instruction = get_next_instruction(program, index)
     parameters = get_instruction_parameters(program, index, instruction)
-    {status, program} = execute_instruction(instruction, parameters, program)
-    run_program(program, index + 4, status)
+
+    {status, program, increment} =
+      execute_instruction(instruction, parameters, program, {input_getter})
+
+    run_program(program, index + increment, status)
   end
 
-  defp execute_instruction(1, {first, second, result}, program) do
+  defp execute_instruction(1, {first, second, result}, program, _) do
     program = %{program | result => program[first] + program[second]}
-    {:ok, program}
+    {:ok, program, 4}
   end
 
-  defp execute_instruction(2, {first, second, result}, program) do
+  defp execute_instruction(2, {first, second, result}, program, _) do
     program = %{program | result => program[first] * program[second]}
-    {:ok, program}
+    {:ok, program, 4}
   end
 
-  defp execute_instruction(99, _, program), do: {:halt, program}
+  defp execute_instruction(3, {first}, program, {input_getter}) do
+    input = input_getter.() |> String.trim("\n") |> String.to_integer()
+    program = %{program | first => input}
+    {:ok, program, 2}
+  end
+
+  defp execute_instruction(99, _, program, _), do: {:halt, program, 0}
 
   defp get_next_instruction(program, index), do: program[index]
 
-  defp get_instruction_parameters(program, index, 3), do: program[index + 1]
-  defp get_instruction_parameters(program, index, 4), do: program[index + 1]
+  defp get_instruction_parameters(program, index, 3), do: {program[index + 1]}
+  defp get_instruction_parameters(program, index, 4), do: {program[index + 1]}
 
   defp get_instruction_parameters(program, index, _),
     do: {program[index + 1], program[index + 2], program[index + 3]}
