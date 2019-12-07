@@ -20,12 +20,26 @@ defmodule IntcodeComputer do
     run_program(program, new_index, status, dependencies)
   end
 
-  defp execute_instruction(1, current_index, {first, second, result}, {m_one, m_two, _m_three}, program, _) do
+  defp execute_instruction(
+         1,
+         current_index,
+         {first, second, result},
+         {m_one, m_two, _m_three},
+         program,
+         _
+       ) do
     program = %{program | result => fetch(program, first, m_one) + fetch(program, second, m_two)}
     {:ok, program, current_index + 4}
   end
 
-  defp execute_instruction(2, current_index, {first, second, result}, {m_one, m_two, _m_three}, program, _) do
+  defp execute_instruction(
+         2,
+         current_index,
+         {first, second, result},
+         {m_one, m_two, _m_three},
+         program,
+         _
+       ) do
     program = %{program | result => fetch(program, first, m_one) * fetch(program, second, m_two)}
     {:ok, program, current_index + 4}
   end
@@ -55,6 +69,34 @@ defmodule IntcodeComputer do
     {:ok, program, new_index}
   end
 
+  defp execute_instruction(
+         7,
+         current_index,
+         {first, second, result},
+         {m_one, m_two, _},
+         program,
+         _
+       ) do
+    first_input = fetch(program, first, m_one)
+    second_input = fetch(program, second, m_two)
+    program = %{program | result => less_than(first_input, second_input)}
+    {:ok, program, current_index + 4}
+  end
+
+  defp execute_instruction(
+         8,
+         current_index,
+         {first, second, result},
+         {m_one, m_two, _},
+         program,
+         _
+       ) do
+    first_input = fetch(program, first, m_one)
+    second_input = fetch(program, second, m_two)
+    program = %{program | result => equals(first_input, second_input)}
+    {:ok, program, current_index + 4}
+  end
+
   defp execute_instruction(99, _, _, _, program, _), do: {:halt, program, 0}
 
   defp execute_jump_if_true(index, 0, _second_input), do: index + 3
@@ -79,7 +121,8 @@ defmodule IntcodeComputer do
 
   defp get_instruction_parameters(program, index, 3), do: {program[index + 1]}
   defp get_instruction_parameters(program, index, 4), do: {program[index + 1]}
-  defp get_instruction_parameters(program, index, 5), do: {program[index + 1], program[index+2]}
+  defp get_instruction_parameters(program, index, 5), do: {program[index + 1], program[index + 2]}
+  defp get_instruction_parameters(program, index, 6), do: {program[index + 1], program[index + 2]}
 
   defp get_instruction_parameters(program, index, _),
     do: {program[index + 1], program[index + 2], program[index + 3]}
@@ -87,6 +130,12 @@ defmodule IntcodeComputer do
   defp fetch(program, value, mode)
   defp fetch(program, value, 0), do: program[value]
   defp fetch(_program, value, 1), do: value
+
+  defp less_than(first, second) when first < second, do: 1
+  defp less_than(_first, _second), do: 0
+
+  defp equals(first, second) when first == second, do: 1
+  defp equals(_first, _second), do: 0
 
   defmodule Parser do
     def parse_array_to_program(input) do

@@ -43,6 +43,42 @@ defmodule IntcodeComputerTest do
     execute_program(input) |> assert_final_program_is([10, 2, 0, 1, 0, 0, 0, 99])
   end
 
+  test "Jump if false: No jump" do
+    input = [6, 0, 0, 1, 0, 0, 0, 99]
+
+    execute_program(input) |> assert_final_program_is([12, 0, 0, 1, 0, 0, 0, 99])
+  end
+
+  test "Jump if false: Jump" do
+    input = [6, 2, 0, -1, -1, -1, 1, 0, 0, 0, 99]
+
+    execute_program(input) |> assert_final_program_is([12, 2, 0, -1, -1, -1, 1, 0, 0, 0, 99])
+  end
+
+  test "Less than: True" do
+    input = [7, 0, 4, 0, 99]
+
+    execute_program(input) |> assert_final_program_is([1, 0, 4, 0, 99])
+  end
+
+  test "Less than: False" do
+    input = [7, 0, 2, 0, 99]
+
+    execute_program(input) |> assert_final_program_is([0, 0, 2, 0, 99])
+  end
+
+  test "Equals: True" do
+    input = [8, 0, 0, 0, 99]
+
+    execute_program(input) |> assert_final_program_is([1, 0, 0, 0, 99])
+  end
+
+  test "Equals: False" do
+    input = [8, 0, 2, 0, 99]
+
+    execute_program(input) |> assert_final_program_is([0, 0, 2, 0, 99])
+  end
+
   test "Day Two: Example 1" do
     input = [1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50]
 
