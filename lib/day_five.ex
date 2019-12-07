@@ -16,7 +16,14 @@ defmodule DayFive do
   end
 
   defp run_part_two(program) do
-    program
+    outputter = spawn_link(fn -> capture_output() end)
+    output = fn output -> send(outputter, {:output, output}) end
+    IntcodeComputer.run_program(program, {fn -> "5\n" end, output})
+    send(outputter, {:return, self()})
+
+    receive do
+      [final | _] -> final
+    end
   end
 
   defp capture_output(captured_output \\ []) do

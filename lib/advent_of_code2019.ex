@@ -51,7 +51,7 @@ defmodule AdventOfCode2019 do
       |> DayFive.execute()
 
     IO.puts("5.1 #{result[:one]}")
-    IO.puts("5.2 Not yet")
+    IO.puts("5.2 #{result[:two]}")
   end
 
   defp to_ints(input), do: Enum.map(input, &String.to_integer(&1))
