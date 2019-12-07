@@ -77,12 +77,12 @@ defmodule IntcodeComputerTest do
 
   defp execute_program(input) do
     IntcodeComputer.Parser.parse_array_to_program(input)
-    |> IntcodeComputer.run_program({fn -> "" end})
+    |> IntcodeComputer.run_program({fn -> "" end, fn output -> IO.puts(output) end})
   end
 
   defp execute_program(input, input_getter_stub) do
     IntcodeComputer.Parser.parse_array_to_program(input)
-    |> IntcodeComputer.run_program({input_getter_stub})
+    |> IntcodeComputer.run_program({input_getter_stub, fn output -> IO.puts(output) end})
   end
 
   defp assert_final_program_is(actual, expected) do

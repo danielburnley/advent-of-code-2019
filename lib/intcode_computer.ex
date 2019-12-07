@@ -10,14 +10,14 @@ defmodule IntcodeComputer do
 
   def run_program(program, _, :halt, _), do: program
 
-  def run_program(program, index, _status, {input_getter}) do
+  def run_program(program, index, _status, dependencies) do
     {instruction, modes} = get_next_instruction(program, index)
     parameters = get_instruction_parameters(program, index, instruction)
 
     {status, program, increment} =
-      execute_instruction(instruction, parameters, modes, program, {input_getter})
+      execute_instruction(instruction, parameters, modes, program, dependencies)
 
-    run_program(program, index + increment, status)
+    run_program(program, index + increment, status, dependencies)
   end
 
   defp execute_instruction(1, {first, second, result}, {m_one, m_two, _m_three}, program, _) do
@@ -30,14 +30,14 @@ defmodule IntcodeComputer do
     {:ok, program, 4}
   end
 
-  defp execute_instruction(3, {first}, _, program, {input_getter}) do
+  defp execute_instruction(3, {first}, _, program, {input_getter, _}) do
     input = input_getter.() |> String.trim("\n") |> String.to_integer()
     program = %{program | first => input}
     {:ok, program, 2}
   end
 
-  defp execute_instruction(4, {first}, {m_one, _, _}, program, _) do
-    IO.puts(fetch(program, first, m_one))
+  defp execute_instruction(4, {first}, {m_one, _, _}, program, {_, outputter}) do
+    outputter.(fetch(program, first, m_one))
     {:ok, program, 2}
   end
 
