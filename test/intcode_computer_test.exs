@@ -31,6 +31,18 @@ defmodule IntcodeComputerTest do
     assert_program_outputs(program_to_run, "4\n")
   end
 
+  test "Jump if true: Jump" do
+    input = [5, 0, 0, -1, -1, 1, 0, 0, 0, 99]
+
+    execute_program(input) |> assert_final_program_is([10, 0, 0, -1, -1, 1, 0, 0, 0, 99])
+  end
+
+  test "Jump if true: No jump" do
+    input = [5, 2, 0, 1, 0, 0, 0, 99]
+
+    execute_program(input) |> assert_final_program_is([10, 2, 0, 1, 0, 0, 0, 99])
+  end
+
   test "Day Two: Example 1" do
     input = [1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50]
 

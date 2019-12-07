@@ -14,34 +14,54 @@ defmodule IntcodeComputer do
     {instruction, modes} = get_next_instruction(program, index)
     parameters = get_instruction_parameters(program, index, instruction)
 
-    {status, program, increment} =
-      execute_instruction(instruction, parameters, modes, program, dependencies)
+    {status, program, new_index} =
+      execute_instruction(instruction, index, parameters, modes, program, dependencies)
 
-    run_program(program, index + increment, status, dependencies)
+    run_program(program, new_index, status, dependencies)
   end
 
-  defp execute_instruction(1, {first, second, result}, {m_one, m_two, _m_three}, program, _) do
+  defp execute_instruction(1, current_index, {first, second, result}, {m_one, m_two, _m_three}, program, _) do
     program = %{program | result => fetch(program, first, m_one) + fetch(program, second, m_two)}
-    {:ok, program, 4}
+    {:ok, program, current_index + 4}
   end
 
-  defp execute_instruction(2, {first, second, result}, {m_one, m_two, _m_three}, program, _) do
+  defp execute_instruction(2, current_index, {first, second, result}, {m_one, m_two, _m_three}, program, _) do
     program = %{program | result => fetch(program, first, m_one) * fetch(program, second, m_two)}
-    {:ok, program, 4}
+    {:ok, program, current_index + 4}
   end
 
-  defp execute_instruction(3, {first}, _, program, {input_getter, _}) do
+  defp execute_instruction(3, current_index, {first}, _, program, {input_getter, _}) do
     input = input_getter.() |> String.trim("\n") |> String.to_integer()
     program = %{program | first => input}
-    {:ok, program, 2}
+    {:ok, program, current_index + 2}
   end
 
-  defp execute_instruction(4, {first}, {m_one, _, _}, program, {_, outputter}) do
+  defp execute_instruction(4, current_index, {first}, {m_one, _, _}, program, {_, outputter}) do
     outputter.(fetch(program, first, m_one))
-    {:ok, program, 2}
+    {:ok, program, current_index + 2}
   end
 
-  defp execute_instruction(99, _, _, program, _), do: {:halt, program, 0}
+  defp execute_instruction(5, current_index, {first, second}, {m_one, m_two, _}, program, _) do
+    first_input = fetch(program, first, m_one)
+    second_input = fetch(program, second, m_two)
+    new_index = execute_jump_if_true(current_index, first_input, second_input)
+    {:ok, program, new_index}
+  end
+
+  defp execute_instruction(6, current_index, {first, second}, {m_one, m_two, _}, program, _) do
+    first_input = fetch(program, first, m_one)
+    second_input = fetch(program, second, m_two)
+    new_index = execute_jump_if_false(current_index, first_input, second_input)
+    {:ok, program, new_index}
+  end
+
+  defp execute_instruction(99, _, _, _, program, _), do: {:halt, program, 0}
+
+  defp execute_jump_if_true(index, 0, _second_input), do: index + 3
+  defp execute_jump_if_true(_index, _, second_input), do: second_input
+
+  defp execute_jump_if_false(_index, 0, second_input), do: second_input
+  defp execute_jump_if_false(index, _, _second_input), do: index + 3
 
   defp get_next_instruction(program, index) do
     {modes, operation} =
@@ -59,6 +79,7 @@ defmodule IntcodeComputer do
 
   defp get_instruction_parameters(program, index, 3), do: {program[index + 1]}
   defp get_instruction_parameters(program, index, 4), do: {program[index + 1]}
+  defp get_instruction_parameters(program, index, 5), do: {program[index + 1], program[index+2]}
 
   defp get_instruction_parameters(program, index, _),
     do: {program[index + 1], program[index + 2], program[index + 3]}
