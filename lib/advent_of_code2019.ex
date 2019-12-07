@@ -1,9 +1,10 @@
 defmodule AdventOfCode2019 do
   def run do
-    day_one()
-    day_two()
-    day_three()
-    day_four()
+    # day_one()
+    # day_two()
+    # day_three()
+    # day_four()
+    day_five()
   end
 
   defp day_one do
@@ -40,6 +41,17 @@ defmodule AdventOfCode2019 do
 
     IO.puts("4.1 #{result[:one]}")
     IO.puts("4.2 #{result[:two]}")
+  end
+
+  defp day_five do
+    result =
+      read_input(5)
+      |> split_by_comma
+      |> to_ints
+      |> DayFive.execute()
+
+    IO.puts("5.1 #{result[:one]}")
+    IO.puts("5.2 Not yet")
   end
 
   defp to_ints(input), do: Enum.map(input, &String.to_integer(&1))
