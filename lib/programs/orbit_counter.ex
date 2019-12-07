@@ -1,7 +1,8 @@
 defmodule OrbitCounter do
   def execute(input) do
-    orbits = Enum.map(input, &(input_to_relationship(&1)))
-    |> map_orbits_for_relationships
+    orbits =
+      Enum.map(input, &input_to_relationship(&1))
+      |> map_orbits_for_relationships
 
     satellites = Map.keys(orbits)
     reducer = fn satellite, acc -> count_orbits_for_satellite(satellite, orbits) + acc end
@@ -10,6 +11,7 @@ defmodule OrbitCounter do
 
   defp count_orbits_for_satellite(satellite, orbits, total \\ 0)
   defp count_orbits_for_satellite("COM", _, total), do: total
+
   defp count_orbits_for_satellite(satellite, orbits, total) do
     count_orbits_for_satellite(orbits[satellite], orbits, total + 1)
   end
@@ -21,7 +23,8 @@ defmodule OrbitCounter do
 
   defp map_orbits_for_relationships(relationships, orbits \\ %{})
   defp map_orbits_for_relationships([], orbits), do: orbits
-  defp map_orbits_for_relationships([{body, satellite}|rest], orbits) do
+
+  defp map_orbits_for_relationships([{body, satellite} | rest], orbits) do
     orbits = Map.put(orbits, satellite, body)
     map_orbits_for_relationships(rest, orbits)
   end
