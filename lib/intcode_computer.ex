@@ -72,25 +72,4 @@ defmodule IntcodeComputer do
       Enum.with_index(input) |> Enum.map(fn {v, k} -> {k, v} end) |> Map.new()
     end
   end
-
-  defmodule CPU do
-  end
-
-  defmodule Memory do
-    def load(program) do
-      execute(program)
-    end
-
-    defp execute(program) do
-      receive do
-        {caller, :fetch, index, 2} ->
-          send(caller, {program[index + 1], program[index + 2]})
-
-        {caller, :fetch, index, 3} ->
-          send(caller, {program[index + 1], program[index + 2], program[index + 3]})
-      end
-
-      execute(program)
-    end
-  end
 end
