@@ -8,8 +8,8 @@ defmodule IntcodeComputerTest do
   end
 
   test "Immediate addition" do
-    input = [1101, 2, 2, 3, 99]
-    execute_program(input) |> assert_final_program_is([1101, 2, 2, 4, 99])
+    input = [101, 2, 4, 3, 99]
+    execute_program(input) |> assert_final_program_is([101, 2, 4, 101, 99])
   end
 
   test "Multiplication" do

@@ -20,12 +20,12 @@ defmodule IntcodeComputer do
     run_program(program, index + increment, status)
   end
 
-  defp execute_instruction(1, {first, second, result}, {m_one, m_two, m_three}, program, _) do
+  defp execute_instruction(1, {first, second, result}, {m_one, m_two, _m_three}, program, _) do
     program = %{program | result => fetch(program, first, m_one) + fetch(program, second, m_two)}
     {:ok, program, 4}
   end
 
-  defp execute_instruction(2, {first, second, result}, {m_one, m_two, m_three}, program, _) do
+  defp execute_instruction(2, {first, second, result}, {m_one, m_two, _m_three}, program, _) do
     program = %{program | result => fetch(program, first, m_one) * fetch(program, second, m_two)}
     {:ok, program, 4}
   end
@@ -51,7 +51,7 @@ defmodule IntcodeComputer do
       |> String.graphemes()
       |> Enum.split(3)
 
-    [m_one, m_two, m_three] = Enum.map(modes, &String.to_integer(&1))
+    [m_three, m_two, m_one] = Enum.map(modes, &String.to_integer(&1))
     operation = Enum.join(operation) |> String.to_integer()
 
     {operation, {m_one, m_two, m_three}}
