@@ -5,7 +5,8 @@ defmodule AdventOfCode2019 do
     # day_three()
     # day_four()
     # day_five()
-    day_six()
+    # day_six()
+    day_seven()
   end
 
   defp day_one do
@@ -63,6 +64,17 @@ defmodule AdventOfCode2019 do
 
     IO.puts("6.1 #{result[:one]}")
     IO.puts("6.2 #{result[:two]}")
+  end
+
+  defp day_seven do
+    result =
+      read_input(7)
+      |> split_by_comma
+      |> to_ints
+      |> DaySeven.execute()
+
+    IO.puts("7.1 #{result[:one]}")
+    IO.puts("7.2 #{result[:two]}")
   end
 
   defp to_ints(input), do: Enum.map(input, &String.to_integer(&1))
