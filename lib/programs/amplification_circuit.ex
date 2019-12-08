@@ -1,9 +1,9 @@
 defmodule AmplificationCircuit do
   def get_maximum_thrust_signal(input) do
     indexed_input = IntcodeComputer.Parser.parse_array_to_program(input)
-    phase_settings = permutations([0,1,2,3,4])
+    phase_settings = permutations([0, 1, 2, 3, 4])
 
-    Enum.map(phase_settings, &(calculate_thrust_signal(&1, indexed_input))) |> Enum.max
+    Enum.map(phase_settings, &calculate_thrust_signal(&1, indexed_input)) |> Enum.max()
   end
 
   defp calculate_thrust_signal([a, b, c, d, e], program) do
@@ -24,22 +24,28 @@ defmodule AmplificationCircuit do
     output = fn output -> send(outputter, {:output, output}) end
 
     IntcodeComputer.run_program(program, {input, output})
-    
+
     send(outputter, {:return, self()})
-    captured_output = receive do
-      [output] -> output
-    end
+
+    captured_output =
+      receive do
+        [output] -> output
+      end
 
     captured_output
   end
 
   defp permutations([]), do: [[]]
-  defp permutations(list), do: for elem <- list, rest <- permutations(list--[elem]), do: [elem|rest]
+
+  defp permutations(list),
+    do: for(elem <- list, rest <- permutations(list -- [elem]), do: [elem | rest])
 
   defp input_getter([]), do: :ok
-  defp input_getter([input|rest]) do
+
+  defp input_getter([input | rest]) do
     receive do
       {:get, caller} -> send(caller, {:ok, Integer.to_string(input)})
+      {:put, input} -> rest = [input | rest] ++ [input]
     end
 
     input_getter(rest)
@@ -47,6 +53,7 @@ defmodule AmplificationCircuit do
 
   defp get_input(inputter) do
     send(inputter, {:get, self()})
+
     receive do
       {:ok, input} -> input
     end
