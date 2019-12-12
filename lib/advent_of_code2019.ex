@@ -7,7 +7,8 @@ defmodule AdventOfCode2019 do
     # day_five()
     # day_six()
     # day_seven()
-    day_eight()
+    # day_eight()
+    day_ten()
   end
 
   defp day_one do
@@ -82,6 +83,16 @@ defmodule AdventOfCode2019 do
     result = read_input(8) |> String.graphemes() |> to_ints |> DayEight.execute()
     IO.puts("8.1 #{result[:one]}")
     IO.puts("8.2 #{result[:two]}")
+  end
+
+  defp day_ten do
+    result =
+      read_input(10)
+      |> split_by_new_line
+      |> Enum.map(fn line -> String.graphemes(line) end)
+      |> DayTen.execute()
+
+    IO.puts("10.1 #{result[:one]}")
   end
 
   defp to_ints(input), do: Enum.map(input, &String.to_integer(&1))

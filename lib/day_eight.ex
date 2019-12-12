@@ -4,5 +4,4 @@ defmodule DayEight do
     part_two = SpaceImageFormat.calculate_image(input, 25, 6)
     [{:one, part_one}, {:two, "\n#{part_two}"}]
   end
-
 end
