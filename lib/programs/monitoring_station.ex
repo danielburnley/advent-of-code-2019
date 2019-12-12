@@ -8,9 +8,7 @@ defmodule MonitoringStation do
         {position, get_viewable_asteroids(position, input, possible_positions -- [position])}
       end)
 
-    {_, total_viewable} = Enum.max_by(viewable_totals, fn {_, count} -> count end)
-
-    total_viewable
+    Enum.max_by(viewable_totals, fn {_, count} -> count end)
   end
 
   defp input_to_coords(input, res \\ %{}, y \\ 0)

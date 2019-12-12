@@ -3,22 +3,22 @@ defmodule MonitoringStationTest do
 
   test "A single asteroid returns 0" do
     input = [["#", "."], [".", "."]]
-    assert MonitoringStation.find_maximum_viewable_asteroids(input) == 0
+    assert MonitoringStation.find_maximum_viewable_asteroids(input) == {{0,0}, 0}
   end
 
   test "Two asteroids returns 1" do
     input = [["#", "."], [".", "#"]]
-    assert MonitoringStation.find_maximum_viewable_asteroids(input) == 1
+    assert MonitoringStation.find_maximum_viewable_asteroids(input) == {{0,0}, 1}
   end
 
   test "Three asteroids returns 2" do
     input = [["#", ".", "."], [".", "#", "."], [".", ".", "#"]]
-    assert MonitoringStation.find_maximum_viewable_asteroids(input) == 2
+    assert MonitoringStation.find_maximum_viewable_asteroids(input) == {{1,1}, 2}
   end
 
   test "Four asteroids returns 3" do
     input = [["#", ".", "#"], [".", "#", "."], [".", ".", "#"]]
-    assert MonitoringStation.find_maximum_viewable_asteroids(input) == 3
+    assert MonitoringStation.find_maximum_viewable_asteroids(input) == {{2,0}, 3}
   end
 
   test "Example one" do
@@ -37,7 +37,7 @@ defmodule MonitoringStationTest do
       ]
       |> Enum.map(fn line -> String.graphemes(line) end)
 
-    assert MonitoringStation.find_maximum_viewable_asteroids(input) == 33
+    assert MonitoringStation.find_maximum_viewable_asteroids(input) == {{5,8}, 33}
   end
 
   test "Example two" do
@@ -56,7 +56,7 @@ defmodule MonitoringStationTest do
       ]
       |> Enum.map(fn line -> String.graphemes(line) end)
 
-    assert MonitoringStation.find_maximum_viewable_asteroids(input) == 35
+    assert MonitoringStation.find_maximum_viewable_asteroids(input) == {{1,2}, 35}
   end
 
   test "Example four" do
@@ -85,6 +85,6 @@ defmodule MonitoringStationTest do
       ]
       |> Enum.map(fn line -> String.graphemes(line) end)
 
-    assert MonitoringStation.find_maximum_viewable_asteroids(input) == 210
+    assert MonitoringStation.find_maximum_viewable_asteroids(input) == {{11,13}, 210}
   end
 end
