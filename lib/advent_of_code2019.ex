@@ -93,6 +93,7 @@ defmodule AdventOfCode2019 do
       |> DayTen.execute()
 
     IO.puts("10.1 #{result[:one]}")
+    IO.puts("10.2 #{result[:two]}")
   end
 
   defp to_ints(input), do: Enum.map(input, &String.to_integer(&1))
