@@ -5,7 +5,8 @@ defmodule MonitoringStation do
 
     viewable_totals =
       Enum.map(possible_positions, fn position ->
-        {position, Enum.count(get_viewable_asteroids(position, input, possible_positions -- [position]))}
+        {position,
+         Enum.count(get_viewable_asteroids(position, input, possible_positions -- [position]))}
       end)
 
     Enum.max_by(viewable_totals, fn {_, count} -> count end)
@@ -16,34 +17,38 @@ defmodule MonitoringStation do
     input = input_to_coords(input)
 
     possible_positions = get_coords_with_asteroids(input)
-    viewable_asteroids = get_viewable_asteroids(station_position, input, possible_positions -- [station_position])
 
-    {x,y} = station_position
-    halves_and_slopes = Enum.map(viewable_asteroids, fn {x2,y2} ->
+    viewable_asteroids =
+      get_viewable_asteroids(station_position, input, possible_positions -- [station_position])
+
+    {x, y} = station_position
+
+    halves_and_slopes =
+      Enum.map(viewable_asteroids, fn {x2, y2} ->
         {
-          get_half({x,y}, {x2, y2}),
-          get_slope({x,y}, {x2,y2}),
-          {x2,y2}
+          get_half({x, y}, {x2, y2}),
+          get_slope({x, y}, {x2, y2}),
+          {x2, y2}
         }
-      end
-    )
+      end)
 
     grouped_inputs = Enum.group_by(halves_and_slopes, fn {half, _, _} -> half end)
-    right_half = Enum.sort_by(grouped_inputs[1], fn {_, slope, _} -> slope * - 1 end)
+    right_half = Enum.sort_by(grouped_inputs[1], fn {_, slope, _} -> slope * -1 end)
     left_half = Enum.sort_by(grouped_inputs[2], fn {_, slope, _} -> slope * -1 end)
-    
-    (right_half ++ left_half) |> Enum.map(fn {_,_, pos} -> pos end)
+
+    (right_half ++ left_half) |> Enum.map(fn {_, _, pos} -> pos end)
   end
 
-  def get_half({x,y}, {x, y2}) when y2 < y, do: 1
-  def get_half({x,y}, {x, y2}) when y2 > y, do: 2
-  def get_half({x,_}, {x2, _}) when x2 > x, do: 1
-  def get_half({x,_}, {x2, _}) when x2 < x, do: 2
+  def get_half({x, y}, {x, y2}) when y2 < y, do: 1
+  def get_half({x, y}, {x, y2}) when y2 > y, do: 2
+  def get_half({x, _}, {x2, _}) when x2 > x, do: 1
+  def get_half({x, _}, {x2, _}) when x2 < x, do: 2
 
-  def get_slope({x,y}, {x,y2}) when y2 > y, do: 999999
-  def get_slope({x,y}, {x,y2}) when y2 < y, do: 999999
-  def get_slope({x,y}, {x2,y2}) do
-    Float.round((y2 - y) / (x2 - x) * - 1, 5)
+  def get_slope({x, y}, {x, y2}) when y2 > y, do: 999_999
+  def get_slope({x, y}, {x, y2}) when y2 < y, do: 999_999
+
+  def get_slope({x, y}, {x2, y2}) do
+    Float.round((y2 - y) / (x2 - x) * -1, 5)
   end
 
   defp input_to_coords(input, res \\ %{}, y \\ 0)
@@ -80,7 +85,7 @@ defmodule MonitoringStation do
         get_viewable_asteroids(position, input, rest, res)
 
       true ->
-        get_viewable_asteroids(position, input, rest, [possible_position|res])
+        get_viewable_asteroids(position, input, rest, [possible_position | res])
     end
   end
 end
