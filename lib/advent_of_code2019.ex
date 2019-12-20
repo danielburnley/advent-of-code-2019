@@ -8,7 +8,8 @@ defmodule AdventOfCode2019 do
     # day_six()
     # day_seven()
     # day_eight()
-    day_ten()
+    # day_ten()
+    day_eleven()
   end
 
   defp day_one do
@@ -96,8 +97,17 @@ defmodule AdventOfCode2019 do
     IO.puts("10.2 #{result[:two]}")
   end
 
+  defp day_eleven do
+    result = DayEleven.execute()
+
+    IO.puts("11.1 #{result[:one]}")
+    IO.puts("11.2 #{result[:two]}")
+  end
+
   defp to_ints(input), do: Enum.map(input, &String.to_integer(&1))
   defp split_by_new_line(input), do: String.split(input, "\n")
   defp split_by_comma(input), do: String.split(input, ",")
   defp read_input(day), do: File.read!("lib/inputs/#{day}.txt") |> String.trim()
 end
+
+145 + 234 + 170 + 90

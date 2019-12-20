@@ -161,7 +161,7 @@ defmodule MonitoringStationTest do
 
       assert Enum.at(vapourised, 0) == {11, 12}
       assert Enum.at(vapourised, 1) == {12, 1}
-      assert Enum.at(vapourised, 200) == {8, 2}
+      assert Enum.at(vapourised, 199) == {8, 2}
     end
 
     defp assert_vapourised(input, expected) do
