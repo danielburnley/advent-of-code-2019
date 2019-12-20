@@ -8,8 +8,9 @@ defmodule AdventOfCode2019 do
     # day_six()
     # day_seven()
     # day_eight()
+    day_nine()
     # day_ten()
-    day_eleven()
+    # day_eleven()
   end
 
   defp day_one do
@@ -84,6 +85,17 @@ defmodule AdventOfCode2019 do
     result = read_input(8) |> String.graphemes() |> to_ints |> DayEight.execute()
     IO.puts("8.1 #{result[:one]}")
     IO.puts("8.2 #{result[:two]}")
+  end
+
+  defp day_nine do
+    result =
+      read_input(9)
+      |> split_by_comma
+      |> to_ints
+      |> DayNine.execute()
+
+    IO.puts("9.1 #{result[:one]}")
+    IO.puts("9.2 #{result[:two]}")
   end
 
   defp day_ten do

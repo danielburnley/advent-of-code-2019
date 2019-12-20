@@ -31,6 +31,28 @@ defmodule IntcodeComputerTest do
     assert_program_outputs(program_to_run, "4\n")
   end
 
+  test "Output with relative" do
+    program_to_run = fn ->
+      execute_program([204, 0, 99])
+    end
+
+    assert_program_outputs(program_to_run, "204\n")
+  end
+
+  test "Output with relative hitting a going out of memory bounds" do
+    program_to_run = fn ->
+      execute_program([109, 10, 204, 5, 99])
+    end
+
+    assert_program_outputs(program_to_run, "0\n")
+  end
+
+  test "Addition with relative hitting a going out of memory bounds" do
+    program = execute_program([109, 2, 21101, 5, 5, 5, 99])
+
+    assert_final_program_is(program, [109, 2, 21101, 5, 5, 5, 99, 10])
+  end
+
   test "Jump if true: Jump" do
     input = [5, 0, 0, -1, -1, 1, 0, 0, 0, 99]
 
@@ -77,6 +99,14 @@ defmodule IntcodeComputerTest do
     input = [8, 0, 2, 0, 99]
 
     execute_program(input) |> assert_final_program_is([0, 0, 2, 0, 99])
+  end
+
+  test "Increment relative base" do
+    program_to_run = fn ->
+      execute_program([109, 4, 204, 0, 99])
+    end
+
+    assert_program_outputs(program_to_run, "99\n")
   end
 
   test "Day Two: Example 1" do
