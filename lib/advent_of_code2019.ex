@@ -135,9 +135,6 @@ defmodule AdventOfCode2019 do
       |> split_by_comma
       |> to_ints
       |> DayThirteen.execute()
-
-    IO.puts("13.1 #{result[:one]}")
-    IO.puts("13.2 #{result[:two]}")
   end
 
   defp to_ints(input), do: Enum.map(input, &String.to_integer(&1))
