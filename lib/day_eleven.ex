@@ -41,7 +41,7 @@ defmodule DayEleven do
       {:painted, painted} -> painted
     end
 
-    IO.puts Map.keys(painted_points) |> Enum.count
+    DayEleven.Hull.print(painted_points)
   end
 
   defmodule Coordinator do
@@ -73,7 +73,7 @@ defmodule DayEleven do
   end
 
   defmodule Hull do
-    def run(hull \\ %{}) do
+    def run(hull \\ %{{0,0} => 1}) do
       receive do
         {:paint, pos, paint} -> 
           hull = Map.put(hull, pos, paint)
@@ -84,6 +84,28 @@ defmodule DayEleven do
         {:painted, caller} ->
           send(caller, {:painted, hull})
       end
+    end
+
+    def print(hull) do
+      xs = Map.keys(hull) |> Enum.map(fn {x, _} -> x end)
+      ys = Map.keys(hull) |> Enum.map(fn {_, y} -> y end)
+
+      min_x = Enum.min(xs)
+      max_x = Enum.max(xs)
+
+      min_y = Enum.min(ys)
+      max_y = Enum.max(ys)
+
+      Enum.each(max_y..min_y, fn y ->
+        IO.puts Enum.map(min_x..max_x, fn x -> 
+          Map.get(hull, {x,y}, 0)
+        end) |> Enum.map(fn paint -> 
+          case paint do
+            0 -> " "
+            1 -> "X"
+          end
+        end) |> Enum.join("")
+      end)
     end
   end
 
