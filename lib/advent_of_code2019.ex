@@ -10,8 +10,9 @@ defmodule AdventOfCode2019 do
     # day_eight()
     # day_nine()
     # day_ten()
-    day_eleven()
+    # day_eleven()
     # day_twelve()
+    day_thirteen()
   end
 
   defp day_one do
@@ -126,6 +127,17 @@ defmodule AdventOfCode2019 do
 
     IO.puts("11.1 #{result[:one]}")
     IO.puts("11.2 #{result[:two]}")
+  end
+
+  defp day_thirteen do
+    result =
+      read_input(13)
+      |> split_by_comma
+      |> to_ints
+      |> DayThirteen.execute()
+
+    IO.puts("13.1 #{result[:one]}")
+    IO.puts("13.2 #{result[:two]}")
   end
 
   defp to_ints(input), do: Enum.map(input, &String.to_integer(&1))

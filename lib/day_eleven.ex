@@ -7,14 +7,16 @@ defmodule DayEleven do
   end
 
   defp part_one(input) do
-    hull = spawn_link(fn -> DayEleven.Hull.run end)
-    robit = spawn_link(fn -> DayEleven.Robot.start end)
+    hull = spawn_link(fn -> DayEleven.Hull.run() end)
+    robit = spawn_link(fn -> DayEleven.Robot.start() end)
 
-    inputter = fn -> 
+    inputter = fn ->
       send(robit, {:position, self()})
-      position = receive do
-        {:position, position} -> position
-      end
+
+      position =
+        receive do
+          {:position, position} -> position
+        end
 
       send(hull, {:get, position, self()})
 
@@ -25,8 +27,9 @@ defmodule DayEleven do
 
     coordinator = spawn_link(fn -> DayEleven.Coordinator.run(hull, robit) end)
 
-    output = fn output -> 
-      send(coordinator, {:output, output, self()}) 
+    output = fn output ->
+      send(coordinator, {:output, output, self()})
+
       receive do
         :ack -> :ack
       end
@@ -37,33 +40,36 @@ defmodule DayEleven do
 
     send(hull, {:painted, self()})
 
-    painted_points = receive do
-      {:painted, painted} -> painted
-    end
+    painted_points =
+      receive do
+        {:painted, painted} -> painted
+      end
 
     DayEleven.Hull.print(painted_points)
   end
 
   defmodule Coordinator do
     def run(hull, robot) do
-      {paint_colour, caller} = receive do
-        {:output, colour, caller} -> {colour, caller}
-      end
-
+      {paint_colour, caller} =
+        receive do
+          {:output, colour, caller} -> {colour, caller}
+        end
 
       send(robot, {:position, self()})
 
-      current_position = receive do
-        {:position, position} -> position
-      end
+      current_position =
+        receive do
+          {:position, position} -> position
+        end
 
       send(hull, {:paint, current_position, paint_colour})
 
       send(caller, :ack)
 
-      {new_direction, caller} = receive do
-        {:output, direction, caller} -> { direction, caller }
-      end
+      {new_direction, caller} =
+        receive do
+          {:output, direction, caller} -> {direction, caller}
+        end
 
       send(robot, {:move, new_direction})
 
@@ -73,14 +79,16 @@ defmodule DayEleven do
   end
 
   defmodule Hull do
-    def run(hull \\ %{{0,0} => 1}) do
+    def run(hull \\ %{{0, 0} => 1}) do
       receive do
-        {:paint, pos, paint} -> 
+        {:paint, pos, paint} ->
           hull = Map.put(hull, pos, paint)
           run(hull)
-        {:get, pos, caller} -> 
+
+        {:get, pos, caller} ->
           send(caller, {:colour, Map.get(hull, pos, 0)})
           run(hull)
+
         {:painted, caller} ->
           send(caller, {:painted, hull})
       end
@@ -97,14 +105,18 @@ defmodule DayEleven do
       max_y = Enum.max(ys)
 
       Enum.each(max_y..min_y, fn y ->
-        IO.puts Enum.map(min_x..max_x, fn x -> 
-          Map.get(hull, {x,y}, 0)
-        end) |> Enum.map(fn paint -> 
-          case paint do
-            0 -> " "
-            1 -> "X"
-          end
-        end) |> Enum.join("")
+        IO.puts(
+          Enum.map(min_x..max_x, fn x ->
+            Map.get(hull, {x, y}, 0)
+          end)
+          |> Enum.map(fn paint ->
+            case paint do
+              0 -> " "
+              1 -> "X"
+            end
+          end)
+          |> Enum.join("")
+        )
       end)
     end
   end
@@ -112,11 +124,12 @@ defmodule DayEleven do
   defmodule Robot do
     def start(position \\ {0, 0}, direction \\ 0) do
       receive do
-        {:move, movement_direction} -> 
+        {:move, movement_direction} ->
           new_direction = change_direction(direction, movement_direction)
           new_position = move(position, new_direction)
           start(new_position, new_direction)
-        {:position, caller} -> 
+
+        {:position, caller} ->
           send(caller, {:position, position})
           start(position, direction)
       end
