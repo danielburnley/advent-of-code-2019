@@ -141,12 +141,15 @@ defmodule IntcodeComputer do
   defp fetch(program, value, mode)
   defp fetch(program, value, 0), do: fetch_value_from_memory(program, value)
   defp fetch(_program, value, 1), do: value
-  defp fetch(program, value, 2), do: fetch_value_from_memory(program, program[:relative_base] + value)
+
+  defp fetch(program, value, 2),
+    do: fetch_value_from_memory(program, program[:relative_base] + value)
 
   defp fetch_value_from_memory(program, index) do
     cond do
       Map.has_key?(program, index) ->
         program[index]
+
       true ->
         0
     end
@@ -154,6 +157,7 @@ defmodule IntcodeComputer do
 
   defp store(program, index, value, mode)
   defp store(program, index, value, 0), do: store_value_in_memory(program, index, value)
+
   defp store(program, index, value, 2) do
     result_index = program[:relative_base] + index
     store_value_in_memory(program, result_index, value)
@@ -162,7 +166,8 @@ defmodule IntcodeComputer do
   defp store_value_in_memory(program, index, value) do
     cond do
       Map.has_key?(program, index) ->
-        %{ program | index => value }
+        %{program | index => value}
+
       true ->
         Map.put(program, index, value)
     end
@@ -176,7 +181,10 @@ defmodule IntcodeComputer do
 
   defmodule Parser do
     def parse_array_to_program(input) do
-      Enum.with_index(input) |> Enum.map(fn {v, k} -> {k, v} end) |> Map.new() |> Map.put(:relative_base, 0)
+      Enum.with_index(input)
+      |> Enum.map(fn {v, k} -> {k, v} end)
+      |> Map.new()
+      |> Map.put(:relative_base, 0)
     end
   end
 end

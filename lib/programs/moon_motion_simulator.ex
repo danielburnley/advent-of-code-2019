@@ -20,13 +20,14 @@ defmodule MoonMotionSimulator do
   defp get_steps_for_axis(values, values, steps) when steps > 0, do: steps
 
   defp get_steps_for_axis(values, original, steps) do
-    new_values = Enum.map(values, fn value ->
-      {pos, velocity} = value
-      new_velocity = calculate_velocity_for_axis(pos, velocity, values -- [value])
-      new_pos = pos + new_velocity
+    new_values =
+      Enum.map(values, fn value ->
+        {pos, velocity} = value
+        new_velocity = calculate_velocity_for_axis(pos, velocity, values -- [value])
+        new_pos = pos + new_velocity
 
-      {new_pos, new_velocity}
-    end)
+        {new_pos, new_velocity}
+      end)
 
     get_steps_for_axis(new_values, original, steps + 1)
   end

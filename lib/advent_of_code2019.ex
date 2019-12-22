@@ -8,9 +8,10 @@ defmodule AdventOfCode2019 do
     # day_six()
     # day_seven()
     # day_eight()
-    day_nine()
+    # day_nine()
     # day_ten()
-    # day_eleven()
+    day_eleven()
+    # day_twelve()
   end
 
   defp day_one do
@@ -110,7 +111,18 @@ defmodule AdventOfCode2019 do
   end
 
   defp day_eleven do
-    result = DayEleven.execute()
+    result =
+      read_input(11)
+      |> split_by_comma
+      |> to_ints
+      |> DayEleven.execute()
+
+    IO.puts("11.1 #{result[:one]}")
+    IO.puts("11.2 #{result[:two]}")
+  end
+
+  defp day_twelve do
+    result = DayTwelve.execute()
 
     IO.puts("11.1 #{result[:one]}")
     IO.puts("11.2 #{result[:two]}")
