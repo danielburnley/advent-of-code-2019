@@ -24,12 +24,18 @@ defmodule DayEleven do
     end
 
     coordinator = spawn_link(fn -> DayEleven.Coordinator.run(hull, robit) end)
-    output = fn output -> send(coordinator, output) end
+
+    output = fn output -> 
+      send(coordinator, {:output, output, self()}) 
+      receive do
+        :ack -> :ack
+      end
+    end
+
     indexed_input = IntcodeComputer.Parser.parse_array_to_program(input)
     IntcodeComputer.run_program(indexed_input, {inputter, output})
 
     send(hull, {:painted, self()})
-    send(robit, {:position, self()})
 
     painted_points = receive do
       {:painted, painted} -> painted
@@ -40,11 +46,8 @@ defmodule DayEleven do
 
   defmodule Coordinator do
     def run(hull, robot) do
-      paint_colour = receive do
-        colour -> colour
-      after
-        1_000 ->
-          Process.exit(self(), :exit)
+      {paint_colour, caller} = receive do
+        {:output, colour, caller} -> {colour, caller}
       end
 
 
@@ -56,12 +59,15 @@ defmodule DayEleven do
 
       send(hull, {:paint, current_position, paint_colour})
 
-      new_direction = receive do
-        direction -> direction
+      send(caller, :ack)
+
+      {new_direction, caller} = receive do
+        {:output, direction, caller} -> { direction, caller }
       end
 
       send(robot, {:move, new_direction})
 
+      send(caller, :ack)
       run(hull, robot)
     end
   end
