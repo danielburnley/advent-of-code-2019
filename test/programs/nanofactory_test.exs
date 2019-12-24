@@ -32,7 +32,7 @@ defmodule NanofactoryTest do
         "20 ORE => 1 B",
         "1 A, 1 B => 1 FUEL"
       ]
-      
+
       assert Nanofactory.ore_required_for_chemical(input, "FUEL") == 30
     end
 
@@ -44,7 +44,7 @@ defmodule NanofactoryTest do
         "1 A, 1 B => 1 D",
         "1 C, 1 D => 1 FUEL"
       ]
-      
+
       assert Nanofactory.ore_required_for_chemical(input, "FUEL") == 60
     end
 
@@ -53,7 +53,7 @@ defmodule NanofactoryTest do
         "10 ORE => 2 A",
         "3 A => 1 FUEL"
       ]
-      
+
       assert Nanofactory.ore_required_for_chemical(input, "FUEL") == 20
     end
 
@@ -111,14 +111,14 @@ defmodule NanofactoryTest do
       {reactions, outputs} = Nanofactory.Parser.execute(input)
 
       assert reactions == %{
-        "FUEL" => %{"A" => 10},
-        "A" => %{"ORE" => 9}
-      }
+               "FUEL" => %{"A" => 10},
+               "A" => %{"ORE" => 9}
+             }
 
       assert outputs == %{
-        "FUEL" => 1,
-        "A" => 5
-      }
+               "FUEL" => 1,
+               "A" => 5
+             }
     end
   end
 end

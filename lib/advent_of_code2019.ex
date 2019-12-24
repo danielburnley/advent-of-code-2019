@@ -139,12 +139,18 @@ defmodule AdventOfCode2019 do
   end
 
   defp day_fourteen do
-    part_one =
+    # part_one =
+    #   read_input(14)
+    #   |> split_by_new_line
+    #   |> Nanofactory.ore_required_for_chemical("FUEL")
+
+    part_two =
       read_input(14)
       |> split_by_new_line
-      |> Nanofactory.ore_required_for_chemical("FUEL")
+      |> Nanofactory.fuel_amount_for_ore(1_000_000_000_000)
 
-    IO.puts "14.1 #{part_one}"
+    # IO.puts "14.1 #{part_one}"
+    IO.puts("14.2 #{part_two}")
   end
 
   defp to_ints(input), do: Enum.map(input, &String.to_integer(&1))
