@@ -16,4 +16,4 @@ test:
 
 .PHONY: test_focus
 test_focus:
-	mix test --only focus:true
+	iex -S mix test --only focus:true
