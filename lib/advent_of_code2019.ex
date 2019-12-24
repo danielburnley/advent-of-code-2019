@@ -12,8 +12,8 @@ defmodule AdventOfCode2019 do
     # day_ten()
     # day_eleven()
     # day_twelve()
-    # day_thirteen()
-    day_fourteen()
+    day_thirteen()
+    # day_fourteen()
   end
 
   defp day_one do

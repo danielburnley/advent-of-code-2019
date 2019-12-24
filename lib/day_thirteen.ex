@@ -25,8 +25,8 @@ defmodule DayThirteen do
     inputter = fn ->
       send(screen, {:screen_to_lines, self()})
 
-      receive do
-        lines -> IO.puts(Enum.join(lines, "\n"))
+      _lines = receive do
+        lines -> lines
       end
 
       send(screen, {:ball_and_paddle_positions, self()})
@@ -66,35 +66,14 @@ defmodule DayThirteen do
           run(Map.put(pixels, :score, score))
 
         {:display, {x, y, id}} ->
+          pixels = Map.put(pixels, {x, y}, id)
+          lines = pixels_to_lines(pixels) ++ ["Score: #{pixels[:score]}"] |> Enum.join("\n")
+          IO.puts("\e[H\e[2J")
+          IO.puts(lines)
           run(Map.put(pixels, {x, y}, id))
 
         {:screen_to_lines, caller} ->
-          xs = Map.delete(pixels, :score) |> Map.keys() |> Enum.map(fn {x, _} -> x end)
-          ys = Map.delete(pixels, :score) |> Map.keys() |> Enum.map(fn {_, y} -> y end)
-
-          min_x = Enum.min(xs)
-          max_x = Enum.max(xs)
-
-          min_y = Enum.min(ys)
-          max_y = Enum.max(ys)
-
-          lines =
-            Enum.map(min_y..max_y, fn y ->
-              Enum.map(min_x..max_x, fn x ->
-                Map.get(pixels, {x, y}, 0)
-              end)
-              |> Enum.map(fn tile ->
-                case tile do
-                  0 -> " "
-                  1 -> "|"
-                  2 -> "X"
-                  3 -> "-"
-                  4 -> "O"
-                end
-              end)
-              |> Enum.join("")
-            end)
-
+          lines = pixels_to_lines(pixels)
           send(caller, lines ++ ["Score: #{pixels[:score]}"])
           run(pixels)
 
@@ -111,6 +90,34 @@ defmodule DayThirteen do
         {:print_score} ->
           IO.puts("Final score: #{pixels[:score]}")
       end
+    end
+
+    defp pixels_to_lines(pixels) do
+      xs = Map.delete(pixels, :score) |> Map.keys() |> Enum.map(fn {x, _} -> x end)
+      ys = Map.delete(pixels, :score) |> Map.keys() |> Enum.map(fn {_, y} -> y end)
+
+      min_x = Enum.min(xs)
+      max_x = Enum.max(xs)
+
+      min_y = Enum.min(ys)
+      max_y = Enum.max(ys)
+
+      lines =
+        Enum.map(min_y..max_y, fn y ->
+          Enum.map(min_x..max_x, fn x ->
+            Map.get(pixels, {x, y}, 0)
+          end)
+          |> Enum.map(fn tile ->
+            case tile do
+              0 -> " "
+              1 -> "█"
+              2 -> "X"
+              3 -> "▀"
+              4 -> "O"
+            end
+          end)
+          |> Enum.join("")
+        end)
     end
   end
 
