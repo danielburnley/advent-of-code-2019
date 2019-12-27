@@ -25,9 +25,10 @@ defmodule DayThirteen do
     inputter = fn ->
       send(screen, {:screen_to_lines, self()})
 
-      _lines = receive do
-        lines -> lines
-      end
+      _lines =
+        receive do
+          lines -> lines
+        end
 
       send(screen, {:ball_and_paddle_positions, self()})
 
@@ -67,7 +68,7 @@ defmodule DayThirteen do
 
         {:display, {x, y, id}} ->
           pixels = Map.put(pixels, {x, y}, id)
-          lines = pixels_to_lines(pixels) ++ ["Score: #{pixels[:score]}"] |> Enum.join("\n")
+          lines = (pixels_to_lines(pixels) ++ ["Score: #{pixels[:score]}"]) |> Enum.join("\n")
           IO.puts("\e[H\e[2J")
           IO.puts(lines)
           run(Map.put(pixels, {x, y}, id))

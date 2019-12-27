@@ -12,8 +12,9 @@ defmodule AdventOfCode2019 do
     # day_ten()
     # day_eleven()
     # day_twelve()
-    day_thirteen()
+    # day_thirteen()
     # day_fourteen()
+    day_fifteen()
   end
 
   defp day_one do
@@ -139,18 +140,29 @@ defmodule AdventOfCode2019 do
   end
 
   defp day_fourteen do
-    # part_one =
-    #   read_input(14)
-    #   |> split_by_new_line
-    #   |> Nanofactory.ore_required_for_chemical("FUEL")
+    part_one =
+      read_input(14)
+      |> split_by_new_line
+      |> Nanofactory.ore_required_for_chemical("FUEL")
 
     part_two =
       read_input(14)
       |> split_by_new_line
       |> Nanofactory.fuel_amount_for_ore(1_000_000_000_000)
 
-    # IO.puts "14.1 #{part_one}"
+    IO.puts("14.1 #{part_one}")
     IO.puts("14.2 #{part_two}")
+  end
+
+  defp day_fifteen do
+    result =
+      read_input(15)
+      |> split_by_comma
+      |> to_ints
+      |> DayFifteen.execute()
+
+    IO.puts("15.1 #{result[:one]}")
+    IO.puts("15.2 #{result[:two]}")
   end
 
   defp to_ints(input), do: Enum.map(input, &String.to_integer(&1))
